@@ -33,7 +33,7 @@ exports.browsers = {
     platformtype: 'compiler',
   },
   babel: {
-    full: 'Babel 6.5 + core-js 2.1',
+    full: 'Babel 6.5 + core-js 2.2',
     short: 'Babel +<br><nobr>core-js</nobr>',
     obsolete: false,
     platformtype: 'compiler',
@@ -47,7 +47,7 @@ exports.browsers = {
     platformtype: 'compiler',
   },
   closure: {
-    full: 'Closure Compiler v20160201',
+    full: 'Closure Compiler v20160315',
     short: 'Closure',
     obsolete: false,
     platformtype: 'compiler',
@@ -61,7 +61,7 @@ exports.browsers = {
     note_html: 'Have to be enabled via <code>harmony</code> option'
   },
   typescript: {
-    full: 'TypeScript 1.8 + core-js 2.1',
+    full: 'TypeScript 1.8 + core-js 2.2',
     short: 'Type-<br />Script +<br /><nobr>core-js</nobr>',
     obsolete: false,
     platformtype: 'compiler'
@@ -95,6 +95,14 @@ exports.browsers = {
     full: 'Microsoft Edge',
     family: 'Chakra',
     short: 'Edge 13',
+    note_id: 'edge-experimental-flag',
+    note_html: 'Flagged features have to be enabled via "Enable experimental Javascript features" setting under about:flags',
+  },
+  edge14: {
+    full: 'Microsoft Edge',
+    family: 'Chakra',
+    short: 'Edge 14',
+    unstable: true,
     note_id: 'edge-experimental-flag',
     note_html: 'Flagged features have to be enabled via "Enable experimental Javascript features" setting under about:flags',
   },
@@ -161,22 +169,22 @@ exports.browsers = {
   firefox31: {
     full: 'Firefox',
     short: 'FF 31',
-    obsolete: true
+    obsolete: very
   },
   firefox32: {
     full: 'Firefox',
     short: 'FF 32',
-    obsolete: true
+    obsolete: very
   },
   firefox33: {
     full: 'Firefox',
     short: 'FF 33',
-    obsolete: true
+    obsolete: very
   },
   firefox34: {
     full: 'Firefox',
     short: 'FF 34',
-    obsolete: true
+    obsolete: very
   },
   firefox35: {
     full: 'Firefox',
@@ -196,7 +204,7 @@ exports.browsers = {
   firefox38: {
     full: 'Firefox',
     short: 'FF 38<br> ESR',
-    obsolete: false, // ESR (EOL at Mar 2016)
+    obsolete: false, // ESR (EOL at May 2016)
   },
   firefox39: {
     full: 'Firefox',
@@ -230,11 +238,22 @@ exports.browsers = {
   },
   firefox45: {
     full: 'Firefox',
-    short: 'FF 45',
+    short: 'FF 45 ESR',
+    obsolete: false, // ESR (EOL at Mar 2017)
   },
   firefox46: {
     full: 'Firefox',
     short: 'FF 46',
+    unstable: true,
+  },
+  firefox47: {
+    full: 'Firefox',
+    short: 'FF 47',
+    unstable: true,
+  },
+  firefox48: {
+    full: 'Firefox',
+    short: 'FF 48',
     unstable: true,
   },
   chrome: {
@@ -282,25 +301,25 @@ exports.browsers = {
   chrome35: {
     full: 'Chrome, Opera',
     short: 'CH&nbsp;35,<br>OP&nbsp;22',
-    obsolete: true,
+    obsolete: very,
     note_id: 'experimental-flag',
   },
   chrome36: {
     full: 'Chrome, Opera',
     short: 'CH&nbsp;36,<br>OP&nbsp;23',
-    obsolete: true,
+    obsolete: very,
     note_id: 'experimental-flag',
   },
   chrome37: {
     full: 'Chrome, Opera',
     short: 'CH&nbsp;37,<br>OP&nbsp;24',
-    obsolete: true,
+    obsolete: very,
     note_id: 'experimental-flag',
   },
   chrome38: {
     full: 'Chrome, Opera',
     short: 'CH&nbsp;38,<br>OP&nbsp;25',
-    obsolete: true,
+    obsolete: very,
     note_id: 'experimental-flag',
   },
   chrome39: {
@@ -405,7 +424,7 @@ exports.browsers = {
     short: 'SF 9',
   },
   webkit: {
-    full: 'WebKit r197500',
+    full: 'WebKit r198376',
     short: 'WK',
     unstable: true,
   },
@@ -441,6 +460,7 @@ exports.browsers = {
     platformtype: 'engine',
     note_id: 'harmony-flag',
     note_html: 'Flagged features have to be enabled via <code>--harmony</code> or <code>--es_staging</code> flag',
+    obsolete: false // Long-term support ends April 2017.
   },
   iojs: {
     full: 'io.js',
@@ -457,6 +477,7 @@ exports.browsers = {
     short: 'Node<br>4.0',
     platformtype: 'engine',
     note_id: 'harmony-flag',
+    obsolete: false // Long-term support ends April 2018.
   },
   node5:  {
     full: 'Node.js',
@@ -464,6 +485,7 @@ exports.browsers = {
     short: 'Node<br>5.0',
     platformtype: 'engine',
     note_id: 'harmony-flag',
+    obsolete: false // Long-term support ends April 2019.
   },
   ejs: {
     full: 'Echo JS',
@@ -817,7 +839,6 @@ exports.tests = [
         return !a.hasOwnProperty("prototype");
       */},
       res: {
-        edge12:      true,
         firefox23:   true,
         chrome39:    flag,
         chrome40:    false,
@@ -1021,6 +1042,71 @@ exports.tests = [
       }
     },
     {
+      name: 'for loop statement scope',
+      exec: function(){/*
+       const baz = 1;
+       for(const baz = 0; false;) {}
+       return baz === 1;
+       */},
+      res: {
+        tr:          true,
+        ejs:         true,
+        es6tr:       true,
+        babel:       true,
+        typescript:  true,
+        closure:     true,
+        ie11:        true,
+        firefox11:   { val: flag, note_id: 'fx-let', },
+        firefox44:   true,
+        webkit:      true,
+        chrome48:    flag,
+        chrome49:    true,
+        xs6:         true,
+      },
+    },
+    {
+      name: 'for-in loop iteration scope',
+      exec: function(){/*
+        var scopes = [];
+        for(const i in { a:1, b:1 }) {
+          scopes.push(function(){ return i; });
+        }
+        return (scopes[0]() === "a" && scopes[1]() === "b");
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  true,
+        closure:     true,
+        webkit:      true,
+        edge14:      true,
+        chrome48:    flag,
+        chrome49:    true,
+        xs6:         true,
+      },
+    },
+    {
+      name: 'for-of loop iteration scope',
+      exec: function(){/*
+        var scopes = [];
+        for(const i of ['a','b']) {
+          scopes.push(function(){ return i; });
+        }
+        return (scopes[0]() === "a" && scopes[1]() === "b");
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  true,
+        closure:     true,
+        webkit:      true,
+        edge14:      true,
+        chrome48:    flag,
+        chrome49:    true,
+        xs6:         true,
+      },
+    },
+    {
       name: 'temporal dead zone',
       exec: function(){/*
         var passed = (function(){ try { qux; } catch(e) { return true; }}());
@@ -1098,7 +1184,7 @@ exports.tests = [
         'use strict';
         const bar = 1;
         try {
-          Function("if(true) const baz = 1;")();
+          Function("'use strict'; if(true) const baz = 1;")();
         } catch(e) {
           return true;
         }
@@ -1148,6 +1234,78 @@ exports.tests = [
         xs6:         true,
         jxa:         true,
       }
+    },
+    {
+      name: 'for loop statement scope (strict mode)',
+      exec: function(){/*
+        'use strict';
+        const baz = 1;
+        for(const baz = 0; false;) {}
+        return baz === 1;
+      */},
+      res: {
+        tr:          true,
+        ejs:         true,
+        babel:       true,
+        typescript:  true,
+        es6tr:       true,
+        closure:     true,
+        ie11:        true,
+        firefox11:   { val: flag, note_id: 'fx-let', },
+        firefox44:   true,
+        chrome19dev: flag,
+        chrome41:    true,
+        webkit:      true,
+        node012:     flag,
+        node4:       true,
+        xs6:         true,
+      },
+    },
+    {
+      name: 'for-in loop iteration scope (strict mode)',
+      exec: function(){/*
+        'use strict';
+        var scopes = [];
+        for(const i in { a:1, b:1 }) {
+          scopes.push(function(){ return i; });
+        }
+        return (scopes[0]() === "a" && scopes[1]() === "b");
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  true,
+        closure:     true,
+        chrome40:    flag,
+        chrome41:    true,
+        webkit:      true,
+        edge14:      true,
+        node012:     flag,
+        node4:       true,
+        xs6:         true,
+      },
+    },
+    {
+      name: 'for-of loop iteration scope (strict mode)',
+      exec: function(){/*
+        'use strict';
+        var scopes = [];
+        for(const i of ['a','b']) {
+          scopes.push(function(){ return i; });
+        }
+        return (scopes[0]() === "a" && scopes[1]() === "b");
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  true,
+        closure:     true,
+        webkit:      true,
+        edge14:      true,
+        chrome40:    flag,
+        chrome41:    true,
+        xs6:         true,
+      },
     },
     {
       name: 'temporal dead zone (strict mode)',
@@ -1256,10 +1414,10 @@ exports.tests = [
       },
     },
     {
-      name: 'for-loop statement scope',
+      name: 'for loop statement scope',
       exec: function(){/*
         let baz = 1;
-        for(let baz = 0; false; false) {}
+        for(let baz = 0; false;) {}
         return baz === 1;
       */},
       res: {
@@ -1299,7 +1457,7 @@ exports.tests = [
       },
     },
     {
-      name: 'for-loop iteration scope',
+      name: 'for/for-in loop iteration scope',
       exec: function(){/*
         let scopes = [];
         for(let i = 0; i < 2; i++) {
@@ -1320,6 +1478,7 @@ exports.tests = [
         typescript:  true,
         closure:     true,
         webkit:      true,
+        edge14:      true,
         chrome48:    flag,
         chrome49:    true,
         xs6:         true,
@@ -1382,7 +1541,7 @@ exports.tests = [
         'use strict';
         let bar = 1;
         try {
-          Function("if(true) let baz = 1;")();
+          Function("'use strict'; if(true) let baz = 1;")();
         } catch(e) {
           return true;
         }
@@ -1406,11 +1565,11 @@ exports.tests = [
       },
     },
     {
-      name: 'for-loop statement scope (strict mode)',
+      name: 'for loop statement scope (strict mode)',
       exec: function(){/*
         'use strict';
         let baz = 1;
-        for(let baz = 0; false; false) {}
+        for(let baz = 0; false;) {}
         return baz === 1;
       */},
       res: {
@@ -1455,7 +1614,7 @@ exports.tests = [
       },
     },
     {
-      name: 'for-loop iteration scope (strict mode)',
+      name: 'for/for-in loop iteration scope (strict mode)',
       exec: function(){/*
         'use strict';
         let scopes = [];
@@ -1479,6 +1638,7 @@ exports.tests = [
         chrome37:    flag,
         chrome41:    true,
         webkit:      true,
+        edge14:      true,
         node012:     flag,
         node4:       true,
         xs6:         true,
@@ -3188,7 +3348,7 @@ exports.tests = [
 {
   name: 'non-strict function semantics',
   note_id: 'hoisted-block-functions',
-  note_html: 'The current version of the specification contains <a href="https://esdiscuss.org/topic/block-level-function-declarations-web-legacy-compatibility-bug">multiple bugs</a> for hoisted block-level function declaration semantics, which these tests disregard.',
+  note_html: 'The 2015 version of the specification contains <a href="https://esdiscuss.org/topic/block-level-function-declarations-web-legacy-compatibility-bug">multiple bugs</a> for hoisted block-level function declaration semantics, which these tests disregard.',
   category: 'annex b',
   significance: 'tiny',
   link: 'http://www.ecma-international.org/ecma-262/6.0/#sec-labelled-function-declarations',
@@ -4587,6 +4747,7 @@ exports.tests = [
       res: {
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         edge12:      true,
         es6shim:     true,
         firefox36:   true,
@@ -4608,6 +4769,7 @@ exports.tests = [
       res: {
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         edge12:      true,
         es6shim:     true,
         firefox36:   true,
@@ -4784,6 +4946,7 @@ exports.tests = [
         typescript:  typescript.fallthrough,
         edge13:      true,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -4804,6 +4967,7 @@ exports.tests = [
         typescript:  typescript.fallthrough,
         edge13:      true,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -4836,6 +5000,20 @@ exports.tests = [
         firefox46:   true,
         chrome50:    true,
         webkit:      true,
+      },
+    },
+    {
+      name: '"u" flag, case folding',
+      exec: function() {/*
+        return "ſ".match(/S/iu) && "ſ".match(/\w/iu) && "ſ".match(/\W/iu)
+         && "S".match(/ſ/iu) && "S".match(/\w/iu) && "S".match(/\W/iu);
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  typescript.fallthrough,
+        firefox46:   true,
+        chrome50:    true,
       },
     },
   ],
@@ -5099,6 +5277,7 @@ exports.tests = [
       */},
       res: Object.assign({}, temp.clampedArrayResults, {
         edge12:   false,
+        edge14:   true,
         safari6:  false,
         webkit:   true,
         firefox11:false,
@@ -5509,6 +5688,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5536,6 +5716,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -5601,6 +5782,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         edge12:      true,
         firefox37:   true,
@@ -5644,6 +5826,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -5697,6 +5880,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5719,6 +5903,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5741,6 +5926,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5763,6 +5949,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5785,6 +5972,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -5807,6 +5995,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -5829,6 +6018,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -5851,6 +6041,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         firefox36:   true,
         chrome37:    flag,
@@ -5862,6 +6053,20 @@ exports.tests = [
         xs6:         true,
         jxa:         true,
       },
+    },
+    {
+      name: 'Map.prototype isn\'t an instance',
+      exec: function () {/*
+        new Map();
+        var obj = {};
+        try {
+          Map.prototype.has(obj);
+        }
+        catch(e) {
+          return true;
+        }
+      */},
+      res: temp.basicMap,
     },
     {
       name: 'Map iterator prototype chain',
@@ -5934,6 +6139,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -5960,6 +6166,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -6025,6 +6232,7 @@ exports.tests = [
         babel:       true,
         ejs:         true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         edge12:      true,
         firefox37:   true,
@@ -6071,6 +6279,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -6126,6 +6335,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -6148,6 +6358,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -6170,6 +6381,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -6192,6 +6404,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         ie11:        true,
@@ -6214,6 +6427,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -6235,6 +6449,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -6257,6 +6472,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -6279,6 +6495,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         chrome51:    true,
         ejs:         true,
         firefox36:   true,
@@ -6291,6 +6508,20 @@ exports.tests = [
         xs6:         true,
         jxa:         true,
       },
+    },
+    {
+      name: 'Set.prototype isn\'t an instance',
+      exec: function () {/*
+        new Set();
+        var obj = {};
+        try {
+          Set.prototype.has(obj);
+        }
+        catch(e) {
+          return true;
+        }
+      */},
+      res: temp.basicSet,
     },
     {
       name: 'Set iterator prototype chain',
@@ -6415,7 +6646,7 @@ exports.tests = [
         typescript:  typescript.corejs,
         ie11:        true,
         chrome36:    true,
-        safari9:     true,
+        safari71_8:  true,
         webkit:      true,
         node4:       true,
         firefox42:   true,
@@ -6573,6 +6804,45 @@ exports.tests = [
         xs6:         true,
         jxa:         true,
       },
+    },
+    {
+      name: '.has, .get and .delete methods accept primitives',
+      exec: function () {/*
+        var m = new WeakMap;
+        return m.has(1) === false
+          && m.get(1) === undefined
+          && m.delete(1) === false;
+      */},
+      res: {
+        babel:       true,
+        typescript:  typescript.corejs,
+        ie11:        true,
+        firefox38:   true,
+        chrome41:    true,
+        safari9:     true,
+        webkit:      true,
+        iojs:        true,
+        ejs:         null,
+        xs6:         null,
+        jxa:         null,
+      },
+    },
+    {
+      name: 'WeakMap.prototype isn\'t an instance',
+      exec: function () {/*
+        new WeakMap();
+        var obj = {};
+        try {
+          WeakMap.prototype.has(obj);
+        }
+        catch(e) {
+          return true;
+        }
+      */},
+      res: Object.assign({}, temp.basicWeakMap, {
+          firefox11: false,
+          firefox40: true,
+      }),
     },
   ],
 },
@@ -6784,6 +7054,41 @@ exports.tests = [
         jxa:         true,
       },
     },
+    {
+      name: '.has and .delete methods accept primitives',
+      exec: function () {/*
+        var s = new WeakSet;
+        return s.has(1) === false
+          && s.delete(1) === false;
+      */},
+      res: {
+        babel:       true,
+        typescript:  typescript.corejs,
+        edge12:      true,
+        firefox36:   true,
+        chrome41:    true,
+        safari9:     true,
+        webkit:      true,
+        iojs:        true,
+        ejs:         null,
+        xs6:         null,
+        jxa:         null,
+      },
+    },
+    {
+      name: 'WeakSet.prototype isn\'t an instance',
+      exec: function () {/*
+        new WeakSet();
+        var obj = {};
+        try {
+          WeakSet.prototype.has(obj);
+        }
+        catch(e) {
+          return true;
+        }
+      */},
+      res: temp.basicWeakSet,
+    },
   ],
 },
 {
@@ -6877,6 +7182,48 @@ exports.tests = [
       },
     },
     {
+      name: '"get" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        var proxied = { };
+        var proxy = new Proxy(proxied, {
+          get: function () {
+            passed = true;
+            return 4;
+          }
+        });
+        // The value reported for a property must be the same as the value of the corresponding
+        // target object property if the target object property is a non-writable,
+        // non-configurable own data property.
+        Object.defineProperty(proxied, "foo", { value: 5, enumerable: true });
+        try {
+          proxy.foo;
+          return false;
+        }
+        catch(e) {}
+        // The value reported for a property must be undefined if the corresponding target
+        // object property is a non-configurable own accessor property that has undefined
+        // as its [[Get]] attribute.
+        Object.defineProperty(proxied, "bar",
+          { set: function(){}, enumerable: true });
+        try {
+          proxy.bar;
+          return false;
+        }
+        catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox18:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
       name: '"set" handler',
       exec: function () {/*
         var proxied = { };
@@ -6917,6 +7264,48 @@ exports.tests = [
         typescript:  typescript.fallthrough,
         edge12:      true,
         firefox37:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"set" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // Cannot change the value of a property to be different from the value of
+        // the corresponding target object if the corresponding target object
+        // property is a non-writable, non-configurable own data property.
+        var proxied = {};
+        var proxy = new Proxy(proxied, {
+          set: function () {
+            passed = true;
+            return true;
+          }
+        });
+        Object.defineProperty(proxied, "foo", { value: 2, enumerable: true });
+        proxy.foo = 2;
+        try {
+          proxy.foo = 4;
+          return false;
+        } catch(e) {}
+        // Cannot set the value of a property if the corresponding target
+        // object property is a non-configurable own accessor property
+        // that has undefined as its [[Set]] attribute.
+        Object.defineProperty(proxied, "bar",
+          { get: function(){}, enumerable: true });
+        try {
+          proxy.bar = 2;
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox18:   true,
         xs6:         true,
         chrome49:    true,
         webkit:      true,
@@ -6967,15 +7356,84 @@ exports.tests = [
       },
     },
     {
+      name: '"has" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // A property cannot be reported as non-existent, if it exists as a
+        // non-configurable own property of the target object.
+        var proxied = {};
+        var proxy = new Proxy(proxied, {
+          has: function () {
+            passed = true;
+            return false;
+          }
+        });
+        Object.defineProperty(proxied, "foo", { value: 2, writable: true, enumerable: true });
+        try {
+          'foo' in proxy;
+          return false;
+        } catch(e) {}
+        // A property cannot be reported as non-existent, if it exists as an
+        // own property of the target object and the target object is not extensible.
+        proxied.bar = 2;
+        Object.preventExtensions(proxied);
+        try {
+          'bar' in proxy;
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox18:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
       name: '"deleteProperty" handler',
       exec: function () {/*
-      var proxied = {};
+        var proxied = {};
         var passed = false;
         delete new Proxy(proxied, {
           deleteProperty: function (t, k) {
             passed = t === proxied && k === "foo";
           }
         }).foo;
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox18:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"deleteProperty" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // A property cannot be reported as deleted, if it exists as a non-configurable
+        // own property of the target object.
+        var proxied = {};
+        Object.defineProperty(proxied, "foo", { value: 2, writable: true, enumerable: true });
+        try {
+          delete new Proxy(proxied, {
+            deleteProperty: function () {
+              passed = true;
+              return true;
+            }
+          }).foo;
+          return false;
+        } catch(e) {}
         return passed;
       */},
       res: {
@@ -7022,6 +7480,70 @@ exports.tests = [
       },
     },
     {
+      name: '"getOwnPropertyDescriptor" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // A property cannot be reported as non-existent, if it exists as a non-configurable
+        // own property of the target object.
+        var proxied = {};
+        var proxy = new Proxy(proxied, {
+          getOwnPropertyDescriptor: function () {
+            passed = true;
+            return undefined;
+          }
+        });
+        Object.defineProperty(proxied, "foo", { value: 2, writable: true, enumerable: true });
+        try {
+          Object.getOwnPropertyDescriptor(proxy, "foo");
+          return false;
+        } catch(e) {}
+        // A property cannot be reported as non-existent, if it exists as an own property
+        // of the target object and the target object is not extensible.
+        proxied.bar = 3;
+        Object.preventExtensions(proxied);
+        try {
+          Object.getOwnPropertyDescriptor(proxy, "bar");
+          return false;
+        } catch(e) {}
+        // A property cannot be reported as existent, if it does not exists as an own property
+        // of the target object and the target object is not extensible.
+        try {
+          Object.getOwnPropertyDescriptor(new Proxy(proxied, {
+            getOwnPropertyDescriptor: function() {
+              return { value: 2, configurable: true, writable: true, enumerable: true };
+            }}), "baz");
+          return false;
+        } catch(e) {}
+        // A property cannot be reported as non-configurable, if it does not exists as an own
+        // property of the target object or if it exists as a configurable own property of
+        // the target object.
+        try {
+          Object.getOwnPropertyDescriptor(new Proxy({}, {
+            getOwnPropertyDescriptor: function() {
+              return { value: 2, configurable: false, writable: true, enumerable: true };
+            }}), "baz");
+          return false;
+        } catch(e) {}
+        try {
+          Object.getOwnPropertyDescriptor(new Proxy({baz:1}, {
+            getOwnPropertyDescriptor: function() {
+              return { value: 1, configurable: false, writable: true, enumerable: true };
+            }}), "baz");
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox32:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
       name: '"defineProperty" handler',
       exec: function () {/*
         var proxied = {};
@@ -7045,6 +7567,50 @@ exports.tests = [
         firefox18:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"defineProperty" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // A property cannot be added, if the target object is not extensible.
+        var proxied = Object.preventExtensions({});
+        var proxy = new Proxy(proxied, {
+          defineProperty: function() {
+            passed = true;
+            return true;
+          }
+        });
+        try {
+          Object.defineProperty(proxy, "foo", { value: 2 });
+          return false;
+        } catch(e) {}
+        // A property cannot be non-configurable, unless there exists a corresponding
+        // non-configurable own property of the target object.
+        try {
+          Object.defineProperty(
+            new Proxy({ bar: true }, {
+              defineProperty: function () {
+                return true;
+              }
+            }),
+            "bar",
+            { value: 5, configurable: false, writable: true, enumerable: true }
+          );
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox32:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7065,6 +7631,34 @@ exports.tests = [
         edge12:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"getPrototypeOf" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // If the target object is not extensible, [[GetPrototypeOf]] applied to the proxy object
+        // must return the same value as [[GetPrototypeOf]] applied to the proxy object's target object.
+        try {
+          Object.getPrototypeOf(new Proxy(Object.preventExtensions({}), {
+            getPrototypeOf: function () {
+              passed = true;
+              return {};
+            }
+          }));
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7090,6 +7684,36 @@ exports.tests = [
         edge12:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"setPrototypeOf" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        Object.setPrototypeOf({},{});
+        // If the target object is not extensible, the argument value must be the
+        // same as the result of [[GetPrototypeOf]] applied to target object.
+        try {
+          Object.setPrototypeOf(
+            new Proxy(Object.preventExtensions({}), {
+              setPrototypeOf: function () {
+                passed = true;
+                return true;
+              }
+            }),{});
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7117,6 +7741,42 @@ exports.tests = [
       },
     },
     {
+      name: '"isExtensible" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // [[IsExtensible]] applied to the proxy object must return the same value
+        // as [[IsExtensible]] applied to the proxy object's target object with the same argument.
+        try {
+          Object.isExtensible(new Proxy({}, {
+            isExtensible: function (t) {
+              passed = true;
+              return false;
+            }
+          }));
+          return false;
+        } catch(e) {}
+        try {
+          Object.isExtensible(new Proxy(Object.preventExtensions({}), {
+            isExtensible: function (t) {
+              return true;
+            }
+          }));
+          return false;
+        } catch(e) {}
+        return true;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        firefox31:   true,
+        edge12:      true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
       name: '"preventExtensions" handler',
       exec: function () {/*
         var proxied = {};
@@ -7129,6 +7789,34 @@ exports.tests = [
             }
           })
         );
+        return passed;
+      */},
+      res: {
+        ejs:         true,
+        typescript:  typescript.fallthrough,
+        firefox23:   true,
+        edge12:      true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"preventExtensions" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // [[PreventExtensions]] applied to the proxy object only returns true
+        // if [[IsExtensible]] applied to the proxy object's target object is false.
+        try {
+          Object.preventExtensions(new Proxy({}, {
+            preventExtensions: function () {
+              passed = true;
+              return true;
+            }
+          }));
+          return false;
+        } catch(e) {}
         return passed;
       */},
       res: {
@@ -7168,6 +7856,53 @@ exports.tests = [
         xs6:         true,
         ejs:         true,
         chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"ownKeys" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // The Type of each result List element is either String or Symbol.
+        try {
+          Object.keys(new Proxy({}, {
+            ownKeys: function () {
+              passed = true;
+              return [2];
+            }}));
+          return false;
+        } catch(e) {}
+        // The result List must contain the keys of all non-configurable own properties of the target object. 
+        var proxied = {};
+        Object.defineProperty(proxied, "foo", { value: 2, writable: true, enumerable: true });
+        try {
+          Object.keys(new Proxy(proxied, {
+            ownKeys: function () {
+              return [];
+            }}));
+          return false;
+        } catch(e) {}
+        // If the target object is not extensible, then the result List must contain all the keys
+        // of the own properties of the target object and no other values.
+        try {
+          Object.keys(new Proxy(Object.preventExtensions({b:1}), {
+            ownKeys: function () {
+              return ['a'];
+            }}));
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        typescript:  typescript.fallthrough,
+        firefox18:   { val: false, note_id: 'fx-proxy-ownkeys' },
+        firefox33:   true,
+        edge12:      true,
+        xs6:         true,
+        ejs:         true,
+        chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7195,6 +7930,32 @@ exports.tests = [
       },
     },
     {
+      name: '"apply" handler invariant',
+      exec: function () {/*
+        var passed = false;
+        new Proxy(function(){}, {
+            apply: function () { passed = true; }
+        })();
+        // A Proxy exotic object only has a [[Call]] internal method if the
+        // initial value of its [[ProxyTarget]] internal slot is an object
+        // that has a [[Call]] internal method.
+        try {
+          new Proxy({}, {
+            apply: function () {}
+          })();
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox18:   true,
+        xs6:         true,
+        webkit:      true,
+      },
+    },
+    {
       name: '"construct" handler',
       exec: function () {/*
         var proxied = function(){};
@@ -7211,6 +7972,43 @@ exports.tests = [
         typescript:  typescript.fallthrough,
         edge12:      true,
         firefox18:   true,
+        xs6:         true,
+        chrome49:    true,
+        webkit:      true,
+      },
+    },
+    {
+      name: '"construct" handler invariants',
+      exec: function () {/*
+        var passed = false;
+        new Proxy({},{});
+        // A Proxy exotic object only has a [[Construct]] internal method if the
+        // initial value of its [[ProxyTarget]] internal slot is an object
+        // that has a [[Construct]] internal method.
+        try {
+          new new Proxy({}, {
+            construct: function (t, args) {
+              return {};
+            }
+          })();
+          return false;
+        } catch(e) {}
+        // The result of [[Construct]] must be an Object.
+        try {
+          new new Proxy(function(){}, {
+            construct: function (t, args) {
+              passed = true;
+              return 5;
+            }
+          })();
+          return false;
+        } catch(e) {}
+        return passed;
+      */},
+      res: {
+        typescript:  typescript.fallthrough,
+        edge12:      true,
+        firefox45:   true,
         xs6:         true,
         chrome49:    true,
         webkit:      true,
@@ -7235,6 +8033,7 @@ exports.tests = [
         firefox34:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7249,6 +8048,7 @@ exports.tests = [
         edge12:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7265,6 +8065,7 @@ exports.tests = [
         edge12:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -7289,6 +8090,7 @@ exports.tests = [
         firefox44:   true,
         ejs:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7322,6 +8124,7 @@ exports.tests = [
       res: {
         chrome50:    flag,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -7341,6 +8144,7 @@ exports.tests = [
         ejs:         { val: false, note_id: 'ejs-no-with' },
         chrome49:    true,
         webkit:      true,
+        edge14:      true,
       },
     },
     {
@@ -7431,6 +8235,7 @@ exports.tests = [
         edge13:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7447,6 +8252,7 @@ exports.tests = [
         firefox34:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7463,6 +8269,7 @@ exports.tests = [
         firefox18:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7552,6 +8359,8 @@ exports.tests = [
         firefox46:   true,
         xs6:         true,
         chrome49:    true,
+        edge14:      flag,
+        webkit:      true,
       },
     },
     {
@@ -7583,6 +8392,7 @@ exports.tests = [
         chrome50:    true,
         xs6:         null,
         echojs:      null,
+        webkit:      true,
       },
     },
     {
@@ -7747,6 +8557,7 @@ exports.tests = [
         firefox18:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7818,6 +8629,7 @@ exports.tests = [
         xs6:         true,
         firefox18:   true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -7883,6 +8695,7 @@ exports.tests = [
       */},
       res: {
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -7916,6 +8729,7 @@ exports.tests = [
         xs6:         true,
         firefox44:   true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8062,6 +8876,7 @@ exports.tests = [
         firefox41:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8080,6 +8895,7 @@ exports.tests = [
         firefox41:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8113,6 +8929,7 @@ exports.tests = [
         firefox42:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8137,6 +8954,7 @@ exports.tests = [
         firefox37:   true,
         chrome49:    true,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -8153,6 +8971,7 @@ exports.tests = [
         firefox18:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8216,6 +9035,7 @@ exports.tests = [
         firefox40:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8234,6 +9054,7 @@ exports.tests = [
         firefox40:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8252,6 +9073,7 @@ exports.tests = [
         firefox40:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8270,6 +9092,7 @@ exports.tests = [
         firefox40:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8296,6 +9119,7 @@ exports.tests = [
         firefox37:   true,
         chrome49:    true,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -8313,6 +9137,7 @@ exports.tests = [
         firefox34:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8375,6 +9200,7 @@ exports.tests = [
         firefox32:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8392,6 +9218,7 @@ exports.tests = [
         firefox32:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8409,6 +9236,7 @@ exports.tests = [
         edge13:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8452,6 +9280,7 @@ exports.tests = [
         firefox42:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8680,6 +9509,7 @@ exports.tests = [
         firefox42:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8698,6 +9528,7 @@ exports.tests = [
         xs6:         true,
         ejs:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -8715,6 +9546,7 @@ exports.tests = [
         firefox44:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
   ],
@@ -8745,6 +9577,7 @@ exports.tests = [
     node012:     flag,
     node4:       true,
     xs6:         true,
+    webkit:      true,
   }
 },
 {
@@ -8771,6 +9604,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -8794,6 +9628,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -8817,6 +9652,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -8837,6 +9673,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -8856,6 +9693,7 @@ exports.tests = [
         closure:      true,
         ejs:          true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         webkit:       true,
         chrome49:     true,
@@ -8877,6 +9715,7 @@ exports.tests = [
         babel:        true,
         closure:      true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -8898,6 +9737,7 @@ exports.tests = [
         safari9:      true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -8935,6 +9775,7 @@ exports.tests = [
         tr:           false,
         closure:      false,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -8953,6 +9794,7 @@ exports.tests = [
         ejs:          false,
         firefox16:    true,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -8966,6 +9808,7 @@ exports.tests = [
       */},
       res: Object.assign({}, temp.destructuringResults, {
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -8979,6 +9822,7 @@ exports.tests = [
         safari71_8:   false,
         safari9:      true,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -8997,6 +9841,7 @@ exports.tests = [
       */},
       res: Object.assign({}, temp.destructuringResults, {
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9015,6 +9860,7 @@ exports.tests = [
         es6tr:       true,
         firefox35:   true,
         edge13:      flag,
+        edge14:      true,
         webkit:      true,
         xs6:         true,
         chrome49:    true,
@@ -9038,6 +9884,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:       flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9054,6 +9901,7 @@ exports.tests = [
       res: Object.assign({}, temp.destructuringResults, {
         ejs:          false,
         chrome49:    true,
+        edge14:      true,
         jxa:         true,
       }),
     },
@@ -9072,6 +9920,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9094,6 +9943,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9119,6 +9969,7 @@ exports.tests = [
         jsx:         true,
         closure:     true,
         chrome49:    true,
+        edge14:      true,
         webkit:      true,
       },
     },
@@ -9141,6 +9992,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9163,6 +10015,8 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
+        firefox47:   true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9188,6 +10042,8 @@ exports.tests = [
         safari9:      true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
+        firefox47:    true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9238,6 +10094,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9259,6 +10116,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9279,6 +10137,7 @@ exports.tests = [
         closure:      true,
         ejs:          true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         webkit:       true,
         chrome49:     true,
@@ -9301,6 +10160,7 @@ exports.tests = [
         babel:        true,
         closure:      true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9323,6 +10183,7 @@ exports.tests = [
         safari9:      true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9364,6 +10225,7 @@ exports.tests = [
         safari71_8:   true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9386,6 +10248,7 @@ exports.tests = [
         safari71_8:   true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9404,6 +10267,7 @@ exports.tests = [
         tr:           true,
         closure:      false,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9423,6 +10287,7 @@ exports.tests = [
         ejs:          false,
         firefox16:    true,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9448,6 +10313,7 @@ exports.tests = [
         safari71_8:   false,
         safari9:      true,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9466,6 +10332,7 @@ exports.tests = [
         safari71_8:   true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9492,6 +10359,7 @@ exports.tests = [
         webkit:       true,
         firefox41:    true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9513,6 +10381,7 @@ exports.tests = [
         webkit:       true,
         safari71_8:   true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9535,6 +10404,7 @@ exports.tests = [
       res: Object.assign({}, temp.destructuringResults, {
         closure:      false,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9553,6 +10423,7 @@ exports.tests = [
         es6tr:       true,
         firefox35:   true,
         edge13:      flag,
+        edge14:       true,
         webkit:      true,
         xs6:         true,
         chrome49:    true,
@@ -9570,6 +10441,7 @@ exports.tests = [
       res: Object.assign({}, temp.destructuringResults, {
         ejs:          false,
         chrome49:     true,
+        edge14:       true,
         jxa:          true,
       }),
     },
@@ -9593,6 +10465,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9610,6 +10483,8 @@ exports.tests = [
         babel:        true,
         typescript:   true,
         edge13:       flag,
+        edge14:       true,
+        firefox47:    true,
         xs6:          true,
         webkit:       true,
         chrome49:     true,
@@ -9627,6 +10502,7 @@ exports.tests = [
         safari71_8:  false,
         safari9:     true,
         chrome49:    true,
+        edge14:      true,
         jxa:         true,
       }),
     },
@@ -9648,6 +10524,8 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      false,
+        firefox47:   true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9698,6 +10576,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9719,6 +10598,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9739,6 +10619,7 @@ exports.tests = [
         closure:     true,
         ejs:         true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         safari51:    false,
         safari6:     false,
@@ -9766,6 +10647,7 @@ exports.tests = [
         babel:        true,
         closure:      true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9788,6 +10670,7 @@ exports.tests = [
         safari9:      true,
         webkit:       true,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         chrome49:     true,
         jxa:          true,
@@ -9825,6 +10708,7 @@ exports.tests = [
         tr:           true,
         closure:      false,
         chrome49:     true,
+        edge14:       true,
       }),
     },
     {
@@ -9900,6 +10784,7 @@ exports.tests = [
         es6tr:       true,
         firefox35:   true,
         edge13:      flag,
+        edge14:      true,
         webkit:      true,
         xs6:         true,
         chrome49:    true,
@@ -9937,6 +10822,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9955,6 +10841,7 @@ exports.tests = [
         webkit:      true,
         typescript:  typescript.fallthrough,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9975,6 +10862,7 @@ exports.tests = [
         safari71_8:  true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -9999,6 +10887,7 @@ exports.tests = [
         safari9:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
         jxa:         true,
@@ -10035,6 +10924,8 @@ exports.tests = [
         closure:     true,
         webkit:      true,
         edge13:      flag,
+        edge14:      true,
+        firefox47:   true,
         xs6:         true,
         chrome49:    true,
       },
@@ -10053,8 +10944,10 @@ exports.tests = [
         babel:       false,
         closure:     true,
         edge13:      flag,
+        edge14:      true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -10068,6 +10961,7 @@ exports.tests = [
         webkit:       true,
         typescript:   typescript.fallthrough,
         edge13:       flag,
+        edge14:       true,
         xs6:          true,
         ejs:         { val: false, note_id: 'ejs-no-function-ctor' },
         chrome49:    true,
@@ -10143,6 +11037,31 @@ exports.tests = [
         chrome33:    true,
         node4:       true,
         webkit:      true,
+        xs6:         true,
+      },
+    },
+    {
+      name: 'Promise.prototype isn\'t an instance',
+      exec: function () {/*
+        new Promise(function(){});
+        try {
+          Promise.prototype.then(function(){});
+        } catch (e) {
+          return true;
+        }
+      */},
+      res: {
+        tr:          true,
+        babel:       true,
+        typescript:  typescript.corejs,
+        ejs:         true,
+        es6shim:     true,
+        edge12:      true,
+        firefox29:   true,
+        chrome33:    true,
+        safari71_8:  true,
+        webkit:      true,
+        node012:     true,
         xs6:         true,
       },
     },
@@ -10313,6 +11232,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         edge12:      true,
         firefox34:   true,
@@ -10337,6 +11257,7 @@ exports.tests = [
         es6shim:     true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         edge12:      true,
         firefox23:   true,
         chrome19dev: true,
@@ -10749,6 +11670,7 @@ exports.tests = [
         node012:     true,
         android40:   true,
         edge13:      false,
+        edge14:      true,		
         xs6:         true,
         jxa:         true,
       }),
@@ -10791,6 +11713,7 @@ exports.tests = [
       res: {
         ejs:         true,
         edge12:      true,
+        firefox47:   true,
         chrome45:    true,
         node4:       true,
         xs6:         true,
@@ -10811,6 +11734,7 @@ exports.tests = [
         babel:       true,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -10829,6 +11753,7 @@ exports.tests = [
         chrome50:    flag,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -10844,6 +11769,7 @@ exports.tests = [
         chrome50:    flag,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -10883,6 +11809,7 @@ exports.tests = [
         xs6:         true,
         ejs:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -10903,6 +11830,7 @@ exports.tests = [
         chrome50:    flag,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -10963,6 +11891,7 @@ exports.tests = [
         edge13:      true,
         chrome50:    flag,
         xs6:         true,
+        webkit:      true,
       },
     },
     {
@@ -10981,6 +11910,7 @@ exports.tests = [
         chrome50:     flag,
         xs6:          true,
         jxa:          true,
+        webkit:      true,
       },
     },
     {
@@ -10993,6 +11923,7 @@ exports.tests = [
         babel:        true,
         edge12:       flag,
         edge13:       true,
+        edge14:       false,
         firefox45:    true,
         safari9:      true,
         webkit:       true,
@@ -11080,6 +12011,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -11111,6 +12043,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -11153,6 +12086,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -11177,6 +12111,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -11201,6 +12136,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -11225,6 +12161,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         firefox18:   {
@@ -11484,10 +12421,11 @@ exports.tests = [
       res: {
         firefox41:   true,
         chrome46:    true,
-        //edge13:      true,
+        edge14:      true,
         node5:       true,
         xs6:         true,
         ejs:         true,
+        webkit:      true,
       }
     },
   ]
@@ -11923,6 +12861,7 @@ exports.tests = [
         chrome51:    true,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       }
     },
     {
@@ -11942,6 +12881,7 @@ exports.tests = [
         chrome51:    true,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       }
     },
     {
@@ -12015,7 +12955,7 @@ exports.tests = [
       res: {
         babel:       true,
         typescript:  typescript.corejs,
-        edge13:      null,
+        edge13:      false,
         firefox45:   true,
         chrome50:    flag,
         chrome51:    true,
@@ -12194,6 +13134,7 @@ exports.tests = [
         chrome47:    true,
         xs6:         true,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
@@ -12212,6 +13153,77 @@ exports.tests = [
         node4:       flag,
         xs6:         true,
         webkit:      true,
+        jxa:         true,
+      },
+    },
+    {
+      name: 'Symbol.toStringTag affects existing built-ins',
+      exec: function() {/*
+        var s = Symbol.toStringTag;
+        var passed = true;
+        [
+          [Array.prototype, []],
+          [String.prototype, ''],
+          [arguments, arguments],
+          [Function.prototype, function(){}],
+          [Error.prototype, new Error()],
+          [Boolean.prototype, true],
+          [Number.prototype, 2],
+          [Date.prototype, new Date()],
+          [RegExp.prototype, /./]
+        ].forEach(function(pair){
+          pair[0][s] = "foo";
+          passed &= (Object.prototype.toString.call(pair[1]) === "[object foo]");
+          delete pair[0][s];
+        });
+        return passed;
+      */},
+      res: {
+        babel:       true,
+        ejs:         true,
+        typescript:  typescript.corejs,
+        chrome40:    flag,
+        chrome49:    true,
+        node4:       flag,
+        xs6:         true,
+        webkit:      true,
+        jxa:         true,
+      },
+    },
+    {
+      name: 'Symbol.toStringTag, new built-ins',
+      exec: function() {/*
+        var passed = true;
+        var s = Symbol.toStringTag;
+        [
+          [String, "String Iterator"],
+          [Array, "Array Iterator"],
+          [Map, "Map Iterator"],
+          [Set, "Set Iterator"]
+        ].forEach(function(pair){
+          var iterProto = Object.getPrototypeOf(new pair[0]()[Symbol.iterator]());
+          passed = passed
+            && iterProto.hasOwnProperty(s)
+            && iterProto[s] === pair[1];
+        });
+        passed = passed
+          && Object.getPrototypeOf(function*(){})[s] === "GeneratorFunction"
+          && Object.getPrototypeOf(function*(){}())[s] === "Generator"
+          && Map.prototype[s] === "Map"
+          && Set.prototype[s] === "Set"
+          && ArrayBuffer.prototype[s] === "ArrayBuffer"
+          && DataView.prototype[s] === "DataView"
+          && Promise.prototype[s] === "Promise"
+          && Symbol.prototype[s] === "Symbol"
+          && typeof Object.getOwnPropertyDescriptor(
+            Object.getPrototypeOf(Int8Array).prototype, Symbol.toStringTag).get === "function";
+          return passed;
+      */},
+      res: {
+        typescript:  typescript.corejs,
+        chrome49:    true,
+        xs6:         true,
+        webkit:      null,
         jxa:         true,
       },
     },
@@ -12283,6 +13295,7 @@ exports.tests = [
         xs6:         true,
         chrome48:    flag,
         chrome49:    true,
+        edge14:      flag,
         jxa:         true,
       },
     },
@@ -12487,6 +13500,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         ejs:         true,
         edge12:      true,
@@ -12510,6 +13524,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.fallthrough,
+        closure:     true,
         es6shim:     true,
         firefox32:   true,
         chrome45:    true,
@@ -12531,6 +13546,7 @@ exports.tests = [
         babel:       true,
         ejs:         true,
         typescript:  typescript.corejs,
+        closure:     true,
         edge12:      true,
         es6shim:     true,
         firefox32:   true,
@@ -12551,6 +13567,7 @@ exports.tests = [
       res: {
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         tr:          true,
         edge12:      true,
@@ -12685,6 +13702,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12733,6 +13751,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         edge12:      true,
         firefox32:   true,
@@ -12753,6 +13772,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12776,6 +13796,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12799,6 +13820,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12822,6 +13844,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12844,6 +13867,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12881,6 +13905,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -12993,6 +14018,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13016,6 +14042,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13038,6 +14065,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13060,6 +14088,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13083,6 +14112,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13104,6 +14134,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13126,6 +14157,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         ejs:         true,
         es6shim:     true,
         edge12:      true,
@@ -13153,6 +14185,7 @@ exports.tests = [
         tr:          true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         es6shim:     true,
         edge12:      true,
         firefox31:   true,
@@ -13168,6 +14201,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13189,6 +14223,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13206,6 +14241,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13223,6 +14259,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13240,6 +14277,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13257,6 +14295,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13273,6 +14312,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13290,6 +14330,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13307,6 +14348,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13324,6 +14366,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13341,6 +14384,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13357,6 +14401,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13374,6 +14419,7 @@ exports.tests = [
         ejs:         true,
         babel:       true,
         typescript:  typescript.corejs,
+        closure:     true,
         tr:          true,
         es6shim:     true,
         edge12:      true,
@@ -13476,10 +14522,12 @@ exports.tests = [
   */},
   res: {
     ejs:         true,
-    typescript:  typescript.fallthrough,
+    babel:       true,
+    typescript:  typescript.corejs,
     firefox44:   true,
     chrome47:    true,
     xs6:         true,
+    webkit:      true,
   }
 },
 {
@@ -13603,6 +14651,7 @@ exports.tests = [
         xs6:         true,
         ejs:         true,
         jxa:         true,
+        webkit:      true,
       }
     },
     {
@@ -13619,6 +14668,7 @@ exports.tests = [
         xs6:         true,
         ejs:         true,
         jxa:         true,
+        webkit:      true,
       }
     },
     {
@@ -14596,6 +15646,7 @@ exports.tests = [
         firefox39:   true,
         xs6:         true,
         chrome49:    true,
+        webkit:      true,
       },
     },
     {
@@ -14611,13 +15662,14 @@ exports.tests = [
         ejs:         null,
         xs6:         null,
         jxa:         true,
+        webkit:      true,
       },
     },
     {
       name: 'built-in prototypes are not instances',
       exec: function(){/*
         try {
-          RegExp.prototype.source; return false;
+          RegExp.prototype.exec(); return false;
         } catch(e) {}
         try {
           Date.prototype.valueOf(); return false;
@@ -14634,6 +15686,7 @@ exports.tests = [
       res: {
         xs6:         false,
         jxa:         true,
+        edge14:      flag,
       },
     },
     {
